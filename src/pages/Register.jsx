@@ -3,26 +3,19 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 
 export default function Register() {
-    const [form, setForm] = useState({
-        name: '', email: '', phone: '', password: ''
-    });
-    const [error, setError]   = useState('');
+    const [form, setForm]       = useState({ name: '', email: '', phone: '', password: '' });
+    const [error, setError]     = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+    const navigate              = useNavigate();
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
     const handleRegister = async () => {
         if (!form.name || !form.email || !form.phone || !form.password) {
-            setError('Semua field wajib diisi.');
-            return;
+            setError('Semua field wajib diisi.'); return;
         }
-        setLoading(true);
-        setError('');
-        setSuccess('');
+        setLoading(true); setError(''); setSuccess('');
         try {
             await api.post('/register', form);
             setSuccess('Registrasi berhasil! Silakan login.');
@@ -30,27 +23,18 @@ export default function Register() {
         } catch (err) {
             const errors = err.response?.data?.errors;
             if (errors) {
-                const first = Object.values(errors)[0][0];
-                setError(first);
+                setError(Object.values(errors)[0][0]);
             } else {
                 setError(err.response?.data?.message || 'Registrasi gagal.');
             }
-        } finally {
-            setLoading(false);
-        }
+        } finally { setLoading(false); }
     };
 
     const inputStyle = {
-        width: '100%',
-        padding: '11px 14px',
-        border: '1.5px solid #e5e7eb',
-        borderRadius: '8px',
-        fontSize: 14,
-        outline: 'none',
-        boxSizing: 'border-box',
-        color: '#111827',
-        backgroundColor: '#ffffff',
-        marginBottom: 14,
+        width: '100%', padding: '12px 14px', marginBottom: 18,
+        border: '1.5px solid #e5e7eb', borderRadius: 8,
+        fontSize: 14, outline: 'none', color: '#111827',
+        backgroundColor: '#f9fafb', boxSizing: 'border-box'
     };
 
     return (
@@ -59,128 +43,116 @@ export default function Register() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: '#f1f5f9',
-            fontFamily: 'Segoe UI, sans-serif'
+            background: '#f8fafc',
+            fontFamily: 'Inter, Segoe UI, sans-serif',
+            padding: 20
         }}>
             <div style={{
-                background: 'white',
-                padding: '40px',
-                borderRadius: '12px',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
                 width: '100%',
-                maxWidth: '420px'
+                maxWidth: 420,
+                borderRadius: 16,
+                overflow: 'hidden',
+                boxShadow: '0 8px 40px rgba(0,0,0,0.12)'
             }}>
-                <div style={{ marginBottom: '28px' }}>
-                    <h2 style={{ margin: '0 0 6px', color: '#111827', fontSize: 24, fontWeight: 700 }}>
+                {/* Header */}
+                <div style={{
+                    background: 'linear-gradient(135deg, #1e3a8a, #4f46e5)',
+                    padding: '36px 40px',
+                    textAlign: 'center'
+                }}>
+                    <h2 style={{ margin: '0 0 6px', fontSize: 26, fontWeight: 800, color: 'white' }}>
                         Buat Akun
                     </h2>
-                    <p style={{ margin: 0, color: '#6b7280', fontSize: 14 }}>
+                    <p style={{ margin: 0, fontSize: 14, color: 'rgba(255,255,255,0.75)' }}>
                         Daftar untuk mulai menggunakan Mini Wallet
                     </p>
                 </div>
 
-                {error && (
-                    <div style={{
-                        background: '#fee2e2', border: '1px solid #fca5a5',
-                        color: '#dc2626', padding: '10px 14px',
-                        borderRadius: '8px', marginBottom: '16px', fontSize: 14
-                    }}>
-                        {error}
-                    </div>
-                )}
+                {/* Form */}
+                <div style={{ background: 'white', padding: '36px 40px' }}>
+                    {error && (
+                        <div style={{
+                            background: '#fef2f2', border: '1px solid #fecaca',
+                            color: '#dc2626', padding: '11px 14px',
+                            borderRadius: 8, marginBottom: 20, fontSize: 13
+                        }}>{error}</div>
+                    )}
+                    {success && (
+                        <div style={{
+                            background: '#f0fdf4', border: '1px solid #bbf7d0',
+                            color: '#16a34a', padding: '11px 14px',
+                            borderRadius: 8, marginBottom: 20, fontSize: 13
+                        }}>{success}</div>
+                    )}
 
-                {success && (
-                    <div style={{
-                        background: '#dcfce7', border: '1px solid #86efac',
-                        color: '#16a34a', padding: '10px 14px',
-                        borderRadius: '8px', marginBottom: '16px', fontSize: 14
-                    }}>
-                        {success}
-                    </div>
-                )}
-
-                <div>
-                    <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#374151', fontSize: 14 }}>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
                         Nama Lengkap
                     </label>
                     <input
-                        type="text"
-                        name="name"
+                        type="text" name="name"
                         placeholder="Nama lengkap"
                         value={form.name}
                         onChange={handleChange}
                         style={inputStyle}
                     />
-                </div>
 
-                <div>
-                    <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#374151', fontSize: 14 }}>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
                         Email
                     </label>
                     <input
-                        type="email"
-                        name="email"
+                        type="email" name="email"
                         placeholder="contoh@email.com"
                         value={form.email}
                         onChange={handleChange}
                         style={inputStyle}
                     />
-                </div>
 
-                <div>
-                    <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#374151', fontSize: 14 }}>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
                         Nomor HP
                     </label>
                     <input
-                        type="text"
-                        name="phone"
+                        type="text" name="phone"
                         placeholder="08xxxxxxxxxx"
                         value={form.phone}
                         onChange={handleChange}
                         style={inputStyle}
                     />
-                </div>
 
-                <div>
-                    <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#374151', fontSize: 14 }}>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
                         Password
                     </label>
                     <input
-                        type="password"
-                        name="password"
+                        type="password" name="password"
                         placeholder="Minimal 8 karakter"
                         value={form.password}
                         onChange={handleChange}
                         onKeyDown={e => e.key === 'Enter' && handleRegister()}
-                        style={inputStyle}
+                        style={{ ...inputStyle, marginBottom: 24 }}
                     />
+
+                    <button
+                        onClick={handleRegister}
+                        disabled={loading}
+                        style={{
+                            width: '100%', padding: '13px',
+                            background: loading ? '#94a3b8' : '#1e3a8a',
+                            color: 'white', border: 'none', borderRadius: 8,
+                            fontSize: 15, fontWeight: 700,
+                            cursor: loading ? 'not-allowed' : 'pointer',
+                            marginBottom: 18,
+                            letterSpacing: 0.3
+                        }}
+                    >
+                        {loading ? 'Memproses...' : 'Daftar'}
+                    </button>
+
+                    <p style={{ textAlign: 'center', fontSize: 13, color: '#6b7280', margin: 0 }}>
+                        Sudah punya akun?{' '}
+                        <Link to="/login" style={{ color: '#4f46e5', fontWeight: 700, textDecoration: 'none' }}>
+                            Masuk
+                        </Link>
+                    </p>
                 </div>
-
-                <button
-                    onClick={handleRegister}
-                    disabled={loading}
-                    style={{
-                        width: '100%',
-                        padding: '12px',
-                        background: loading ? '#93c5fd' : '#2563eb',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        fontSize: 15,
-                        fontWeight: 600,
-                        cursor: loading ? 'not-allowed' : 'pointer',
-                        marginBottom: 16
-                    }}
-                >
-                    {loading ? 'Memproses...' : 'Daftar'}
-                </button>
-
-                <p style={{ textAlign: 'center', fontSize: 14, color: '#6b7280', margin: 0 }}>
-                    Sudah punya akun?{' '}
-                    <Link to="/login" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
-                        Login
-                    </Link>
-                </p>
             </div>
         </div>
     );
